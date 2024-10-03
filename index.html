@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anonymous Chat Rooms</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f2f5;
+      color: #333;
+    }
+
+    #sidebar {
+      width: 300px;
+      background: #2f3136;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    #sidebar h2, #sidebar h3 {
+      color: #ffffff;
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ffffff33;
+      padding-bottom: 10px;
+    }
+
+    #rooms {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    #rooms li {
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #40444b;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #rooms li:hover {
+      background-color: #5865f2;
+    }
+
+    #chatroom {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      border-left: 1px solid #e1e1e1;
+      padding: 20px;
+    }
+
+    #messages {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      flex: 1;
+      overflow-y: auto;
+      background-color: #f9f9f9;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #e1e1e1;
+    }
+
+    #messages li {
+      padding: 15px;
+      margin-bottom: 10px;
+      background-color: #f1f1f1;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+      max-width: 75%;
+    }
+
+    #form {
+      display: flex;
+      margin-top: 10px;
+    }
+
+    #input {
+      flex: 1;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #e1e1e1;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+      margin-right: 10px;
+      font-size: 16px;
+    }
+
+    #sendButton {
+      padding: 15px 20px;
+      background-color: #5865f2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #sendButton:hover {
+      background-color: #4752c4;
+    }
+
+    #uploadLabel {
+      background-color: #28a745;
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    #newRoom, #newRoomPassword, #joinRoomName, #joinRoomPassword {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      background-color: #40444b;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+
+    #newRoom:focus, #newRoomPassword:focus, #joinRoomName:focus, #joinRoomPassword:focus {
+      background-color: #5865f2;
+    }
+
+    #createRoomButton, #joinRoomButton {
+      padding: 10px 15px;
+      background-color: #5865f2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-bottom: 20px;
+    }
+
+    #createRoomButton:hover, #joinRoomButton:hover {
+      background-color: #4752c4;
+    }
+
+    /* Donate Button */
+    #donateButton {
+      padding: 12px;
+      background-color: #ffcc00;
+      color: #2f3136;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    #donateButton:hover {
+      background-color: #ffbf00;
+    }
+
+    /* Scrollbar */
+    #messages::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    #messages::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    #messages::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 6px;
+      border: 3px solid #f1f1f1;
+    }
+
+    #messages li img {
+      max-width: 200px;
+      border-radius: 5px;
+      display: block;
+      margin-top: 5px;
+    }
+
+    #input::-webkit-input-placeholder {
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <div id="sidebar">
+    <h2>Chat Rooms</h2>
+    <ul id="rooms">
+      <li id="publicRoom">Public Room</li>
+    </ul>
+    <input id="newRoom" placeholder="Create a new room">
+    <input id="newRoomPassword" placeholder="Password" type="password">
+    <button id="createRoomButton">Create Room</button>
+
+    <h3>Join Room</h3>
+    <input id="joinRoomName" placeholder="Room name">
+    <input id="joinRoomPassword" placeholder="Password" type="password">
+    <button id="joinRoomButton">Join Room</button>
+
+    <!-- Donate Button -->
+    <button id="donateButton">Donate</button>
+  </div>
+
+  <div id="chatroom">
+    <ul id="messages"></ul>
+    <form id="form" action="">
+      <input id="input" autocomplete="off" placeholder="Type your message..."/>
+      <button id="sendButton">Send</button>
+      <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+      <label id="uploadLabel" for="imageUpload">Upload Image</label>
+    </form>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io();
+    var form = document.getElementById('form');
+    var input = document.getElementById('input');
+    var messages = document.getElementById('messages');
+    var currentRoom = 'public';
+
+    // Donation button click
+    document.getElementById('donateButton').addEventListener('click', function() {
+      window.open('https://www.paypal.com/donate?business=your-paypal-id', '_blank');
+    });
+
+    socket.on('set username', function(name) {
+      let userName = prompt("Please enter your username", name);
+      if (userName) {
+        socket.emit('set username', userName);
+      }
+    });
+
+    document.getElementById('createRoomButton').addEventListener('click', function() {
+      var room = document.getElementById('newRoom').value;
+      var password = document.getElementById('newRoomPassword').value;
+      socket.emit('create room', room, password);
+    });
+
+    document.getElementById('joinRoomButton').addEventListener('click', function() {
+      var room = document.getElementById('joinRoomName').value;
+      var password = document.getElementById('joinRoomPassword').value;
+      socket.emit('join room', room, password);
+    });
+
+    document.getElementById('publicRoom').addEventListener('click', function() {
+      socket.emit('join room', 'public', null);
+    });
+
+    socket.on('room created', function(room) {
+      var item = document.createElement('li');
+      item.textContent = room;
+      item.addEventListener('click', function() {
+        socket.emit('join room', room, null);
+      });
+      document.getElementById('rooms').appendChild(item);
+    });
+
+    socket.on('joined room', function(room) {
+      currentRoom = room;
+      document.getElementById('messages').innerHTML = '';
+    });
+
+    socket.on('chat message', function(msg) {
+      var item = document.createElement('li');
+      item.textContent = msg;
+      messages.appendChild(item);
+    });
+
+    socket.on('send image', function(data) {
+      const item = document.createElement('li');
+      const img = document.createElement('img');
+      img.src = data.imageUrl;
+      item.appendChild(img);
+      messages.appendChild(item);
+    });
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (input.value) {
+        socket.emit('chat message', input.value, currentRoom);
+        input.value = '';
+      }
+    });
+
+    document.getElementById('imageUpload').addEventListener('change', function() {
+      var formData = new FormData();
+      formData.append('image', this.files[0]);
+
+      fetch('/upload', {
+        method: 'POST',
+        body: formData
+      }).then(response => response.json())
+        .then(data => {
+          socket.emit('send image', data.filePath, currentRoom);
+        });
+    });
+  </script>
+</body>
+</html>
